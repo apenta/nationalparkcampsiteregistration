@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Capstone
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -16,7 +16,9 @@ namespace Capstone
             // ConfigurationManager opens up the App.config file and looks for an entry called "CapstoneDatabase".
             //     <add name="CapstoneDatabase" connectionString=""/>
             // The actual connection string for the database is found connectionString attribute.            
-            string connectionString = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
+            //string connectionString = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
+            ProjectCLI cli = new ProjectCLI();
+            cli.MainParkList();
         }
     }
 }

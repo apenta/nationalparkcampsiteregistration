@@ -3,6 +3,8 @@ DROP TABLE site;
 DROP TABLE campground;
 DROP TABLE park;
 
+
+
 CREATE TABLE park (
   park_id integer identity NOT NULL,
   name varchar(80) NOT NULL,          -- Name of the park
@@ -209,3 +211,5 @@ ALTER TABLE campground ADD FOREIGN KEY (park_id) REFERENCES park(park_id);
 ALTER TABLE site ADD FOREIGN KEY (campground_id) REFERENCES campground(campground_id);
 ALTER TABLE reservation ADD FOREIGN KEY (site_id) REFERENCES site(site_id);
 
+SELECT *
+from campground;
