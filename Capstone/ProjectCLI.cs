@@ -51,20 +51,20 @@ namespace Capstone
                         break;
                 }
 
-                ParkMenu();
+//                ParkMenu();
             }
         }
 
         const string Command_ViewCampgrounds = "1";
         const string Command_SearchForReservations = "2";
         const string Command_ReturnToPreviousScreen = "3";
-       
+
 
         private void CampgroundList()
         {
             PrintHeader();
             CampgroundMenu();
-            
+
 
             while (true)
             {
@@ -83,9 +83,9 @@ namespace Capstone
 
                     case Command_ReturnToPreviousScreen:
                         PreviousScreen();
-                        return;
+                        break;
 
-                  
+
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
                         break;
@@ -97,7 +97,8 @@ namespace Capstone
         //CAMPGROUND METHODS
         private void PreviousScreen()
         {
-            throw new NotImplementedException();
+            PrintHeader();
+            ParkMenu();
         }
 
         private void SearchReservations()
@@ -115,13 +116,9 @@ namespace Capstone
                 foreach (Campground campground in campgrounds)
                 {
                     Console.WriteLine($"Name           Open             Close           Daily Fee");
-                    Console.WriteLine($"{campground.CampgroundId}    {campground.CampName}    {campground.OpeningMonth});
-                    Console.WriteLine("Location:" + "\t" + park.Location);
-                    Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine("Area:" + "\t" + park.Area + " sq km");
-                    Console.WriteLine("Annual Visitors:" + "\t" + park.Visitors);
+                    Console.WriteLine($"{campground.CampgroundId}    {campground.CampName}    {campground.OpeningMonth}    {campground.DailyFee}");
+//                    Console.WriteLine($"{campground.CampgroundId}    {campground.CampName}    {campground.OpeningMonth}    {campground.DailyFee}");
                     Console.WriteLine();
-                    Console.WriteLine(park.Description);
                     Console.WriteLine();
                 }
             }
@@ -151,6 +148,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
+                    CampgroundMenu();
                 }
             }
             else
@@ -177,6 +175,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
+                    CampgroundMenu();
                 }
             }
             else
@@ -204,6 +203,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
+                    CampgroundMenu();
                 }
             }
             else
@@ -235,7 +235,7 @@ namespace Capstone
         private void CampgroundMenu()
         {
             Console.WriteLine("Select a Command");
-            Console.WriteLine(" 1) - View Campgrounds");
+            Console.WriteLine(" 1) View Campgrounds");
             Console.WriteLine(" 2) Search for Reservation");
             Console.WriteLine(" 3) Return to Previous Screen");
             Console.WriteLine();
