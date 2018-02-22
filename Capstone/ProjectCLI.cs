@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Capstone.DAL;
+using System.Globalization;
+
 
 namespace Capstone
 {
@@ -51,7 +53,7 @@ namespace Capstone
                         break;
                 }
 
-//                ParkMenu();
+               CampgroundList();
             }
         }
 
@@ -105,7 +107,60 @@ namespace Capstone
         {
             throw new NotImplementedException();
         }
+        private string TranslateMonth(int month)
+        {
+            string result = "";
 
+            if (month == 1)
+            {
+                result = "January";
+            }
+            else if (month == 2)
+            {
+                result = "February";
+            }
+            else if (month == 3)
+            {
+                result = "March";
+            }
+            else if (month == 4)
+            {
+                result = "April";
+            }
+            else if (month == 5)
+            {
+                result = "May";
+            }
+            else if (month == 6)
+            {
+                result = "June";
+            }
+            else if (month == 7)
+            {
+                result = "July";
+            }
+            else if (month == 8)
+            {
+                result = "August";
+            }
+            else if (month == 9)
+            {
+                result = "September";
+            }
+            else if (month == 10)
+            {
+                result = "October";
+            }
+            else if (month == 11)
+            {
+                result = "November";
+            }
+            else if (month == 12)
+            {
+                result = "December";
+            }
+            return result;
+        }
         private void ViewAllCampgrounds()
         {
             CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
@@ -113,13 +168,14 @@ namespace Capstone
 
             if (campgrounds.Count > 0)
             {
+                Console.WriteLine($"Name             Open             Close           Daily Fee");
+
                 foreach (Campground campground in campgrounds)
                 {
-                    Console.WriteLine($"Name           Open             Close           Daily Fee");
-                    Console.WriteLine($"{campground.CampgroundId}    {campground.CampName}    {campground.OpeningMonth}    {campground.DailyFee}");
-//                    Console.WriteLine($"{campground.CampgroundId}    {campground.CampName}    {campground.OpeningMonth}    {campground.DailyFee}");
+                    Console.WriteLine($"#{campground.CampgroundId}      {campground.CampName}        {TranslateMonth(campground.OpeningMonth)}     {TranslateMonth(campground.ClosingMonth)}   {campground.DailyFee.ToString("C")}");
                     Console.WriteLine();
-                    Console.WriteLine();
+                    
+                    
                 }
             }
             else
@@ -143,12 +199,12 @@ namespace Capstone
                     Console.WriteLine(park.ParkName + " National Park");
                     Console.WriteLine("Location:" + "\t" + park.Location);
                     Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine("Area:" + "\t" + park.Area + " sq km");
-                    Console.WriteLine("Annual Visitors:" + "\t" + park.Visitors);
+                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
+                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                    CampgroundMenu();
+                    
                 }
             }
             else
@@ -170,12 +226,12 @@ namespace Capstone
                     Console.WriteLine(park.ParkName + " National Park");
                     Console.WriteLine("Location:" + "\t" + park.Location);
                     Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine("Area:" + "\t" + park.Area + " sq km");
-                    Console.WriteLine("Annual Visitors:" + "\t" + park.Visitors);
+                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
+                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                    CampgroundMenu();
+                    
                 }
             }
             else
@@ -198,12 +254,12 @@ namespace Capstone
                     Console.WriteLine(park.ParkName + " National Park");
                     Console.WriteLine("Location:" + "\t" + park.Location);
                     Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine("Area:" + "\t" + park.Area + " sq km");
-                    Console.WriteLine("Annual Visitors:" + "\t" + park.Visitors);
+                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
+                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                    CampgroundMenu();
+                   
                 }
             }
             else
@@ -240,6 +296,9 @@ namespace Capstone
             Console.WriteLine(" 3) Return to Previous Screen");
             Console.WriteLine();
         }
+
+        
+        
 
     }
 }

@@ -11,8 +11,8 @@ namespace Capstone
         public int CampgroundId { get; set; }
         public int ParkId { get; set; }
         public string CampName { get; set; }
-        public DateTime OpeningMonth { get; set; }
-        public DateTime ClosingMonth { get; set; }
+        public int OpeningMonth { get; set; }
+        public int ClosingMonth { get; set; }
         public decimal DailyFee { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace Capstone.DAL
 {
@@ -21,6 +22,7 @@ namespace Capstone.DAL
         {
             List<Campground> output2 = new List<Campground>();
             {
+                
                 try
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
@@ -35,11 +37,12 @@ namespace Capstone.DAL
                         {
                             Campground campground = new Campground();
                             campground.CampgroundId = Convert.ToInt32(reader["campground_id"]);
+                            campground.OpeningMonth = Convert.ToInt32(reader["open_from_mm"]);
+                            campground.ClosingMonth = Convert.ToInt32(reader["open_to_mm"]);
                             campground.CampName = Convert.ToString(reader["name"]);
-                            campground.OpeningMonth = Convert.ToDateTime(reader["open_from_mm"]);
-                            campground.ClosingMonth = Convert.ToDateTime(reader["open_to_mm"]);
                             campground.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 
+                            
 
                             output2.Add(campground);
                         }
@@ -55,4 +58,5 @@ namespace Capstone.DAL
         }
 
     }
+   
 }
