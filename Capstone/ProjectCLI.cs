@@ -105,8 +105,14 @@ namespace Capstone
 
         private void SearchReservations()
         {
-            throw new NotImplementedException();
+            string campgroundId = CLIHelper.GetString("Which campground (enter 0 to cancel)? ");
+            string arrivalDate = CLIHelper.GetString("What is the arrival date? __/__/___");
+            string departureDate = CLIHelper.GetString("What is the departure date? __/__/___");
+        
+            
         }
+
+
         private string TranslateMonth(int month)
         {
             string result = "";
@@ -273,8 +279,13 @@ namespace Capstone
 
         private void PrintHeader()
         {
-            Console.WriteLine(@"National Park Campground Reservation");
-            Console.WriteLine();
+            Console.WriteLine("__    _  _______  _______  ___   _______  __    _  _______  ___        _______  _______  ______    ___   _  _______");
+            Console.WriteLine("|  |  | ||   _   ||       ||   | |       ||  |  | ||   _   ||   |      |       ||   _   ||    _ |  |   | | ||       |");
+            Console.WriteLine("|   |_| ||  |_|  ||_     _||   | |   _   ||   |_| ||  |_|  ||   |      |    _  ||  |_|  ||   | ||  |   |_| ||  _____|");
+            Console.WriteLine("|       ||       |  |   |  |   | |  | |  ||       ||       ||   |      |   |_| ||       ||   |_||_ |      _|| |_____");
+            Console.WriteLine("|  _    ||       |  |   |  |   | |  |_|  ||  _    ||       ||   |___   |    ___||       ||    __  ||     |_ |_____  |");
+            Console.WriteLine("| | |   ||   _   |  |   |  |   | |       || | |   ||   _   ||       |  |   |    |   _   ||   |  | ||    _  | _____| |");
+            Console.WriteLine("|_|  |__||__| |__|  |___|  |___| |_______||_|  |__||__| |__||_______|  |___|    |__| |__||___|  |_||___| |_||_______|");
             Console.WriteLine();
         }
         private void ParkMenu()
