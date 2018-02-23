@@ -27,7 +27,7 @@ namespace Capstone.DAL
                     conn.Open();
 
                     
-                    SqlCommand cmd = new SqlCommand("SELECT site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site LEFT JOIN campground ON campground.campground_id = site.campground_id WHERE campground.campground_id = @campgroundId;", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site JOIN campground ON campground.campground_id = site.campground_id WHERE campground.campground_id = (@campgroundId);", conn);
                     cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
                     cmd.Parameters.AddWithValue("@arrivalDate", arrivalDate);
                     cmd.Parameters.AddWithValue("@departureDate", departureDate);
@@ -44,13 +44,12 @@ namespace Capstone.DAL
                         campSite.Accessible = Convert.ToBoolean(reader["accessible"]);
                         campSite.MaxRvLength = Convert.ToInt32(reader["max_rv_length"]);
                         campSite.Utilities = Convert.ToBoolean(reader["utilities"]);
-                        campground.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
+                        campSite.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
                      
 
                         output.Add(campSite);
-                        
-                        
-                       
+                        //output.Add(campground);
+                    
                     }
                 }
             }

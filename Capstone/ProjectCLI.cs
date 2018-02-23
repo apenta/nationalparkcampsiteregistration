@@ -113,7 +113,7 @@ namespace Capstone
             {
                 foreach (CampSite site in campSites)
                 {
-                    Console.WriteLine($"{site.CampsiteNumber}  {site.MaxOccupancy}  {site.Accessible}  {site.MaxRvLength} {site.Utilities} ");
+                    Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
                 }
             }
             else
