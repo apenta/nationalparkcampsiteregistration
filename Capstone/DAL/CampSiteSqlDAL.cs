@@ -27,10 +27,11 @@ namespace Capstone.DAL
                     conn.Open();
 
 //                    int arrivalMonth = arrivalDate.
-                    SqlCommand cmd = new SqlCommand("SELECT site_number, max_occupancy, accessible, max_rv_length, utilities, campground.daily_fee FROM site LEFT JOIN campground ON campground.campground_id = site.campground_id WHERE site.site_id NOT IN(SELECT reservation.site_id FROM reservation WHERE(@arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date) OR(@arrivalDate <= reservation.from_date AND @departureDate <= reservation.to_date AND @departureDate >= reservation.from_date) OR (@arrivalDate >= reservation.from_date AND @departureDate <= reservation.to_date) OR (@arrivalDate >= reservation.from_date AND @arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date)) AND campground.campground_id = @campgroundId ; ", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT TOP 5 site_number, max_occupancy, accessible, max_rv_length, utilities, campground.daily_fee FROM site LEFT JOIN campground ON campground.campground_id = site.campground_id WHERE site.site_id NOT IN(SELECT reservation.site_id FROM reservation WHERE(@arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date) OR(@arrivalDate <= reservation.from_date AND @departureDate <= reservation.to_date AND @departureDate >= reservation.from_date) OR (@arrivalDate >= reservation.from_date AND @departureDate <= reservation.to_date) OR (@arrivalDate >= reservation.from_date AND @arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date)) AND campground.campground_id = @campgroundId ; ", conn);
                     cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
                     cmd.Parameters.AddWithValue("@arrivalDate", arrivalDate);
                     cmd.Parameters.AddWithValue("@departureDate", departureDate);
+
 
                     SqlDataReader reader = cmd.ExecuteReader();
 

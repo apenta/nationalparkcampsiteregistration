@@ -16,8 +16,10 @@ namespace Capstone
         const string Command_Arches = "2";
         const string Command_CuyahogaNationalValleyPark = "3";
         const string Command_Quit = "q";
-        string DatabaseConnection = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
+
+        static string DatabaseConnection = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
         CampgroundSqlDAL campgroundSqlDAL = null;
+        static ReservationSqlDAL reservationsqlDAL = new ReservationSqlDAL(DatabaseConnection);
 
 
         public void MainParkList()
@@ -81,6 +83,7 @@ namespace Capstone
                 {
                     case Command_ViewCampgrounds:
                         ViewAllCampgrounds(park);
+                        CampgroundMenu();
                         break;
 
                     case Command_SearchForReservations:
@@ -94,10 +97,11 @@ namespace Capstone
 
                     default:
                         Console.WriteLine("The command provided was not a valid command, please try again.");
+                        CampgroundMenu();
                         break;
                 }
 
-                CampgroundMenu();
+                
             }
         }
 
@@ -118,7 +122,9 @@ namespace Capstone
                 int arrivalMonth = Int32.Parse(arrivalDate.Substring(0, 2));
                 int departureMonth = Int32.Parse(departureDate.Substring(0, 2));
 
-                if(((arrivalMonth >= campground.OpeningMonth) && (arrivalMonth <= campground.ClosingMonth)) 
+                int totalStay = (DateTime.Parse(departureDate) - DateTime.Parse(arrivalDate)).Days;
+
+                if (((arrivalMonth >= campground.OpeningMonth) && (arrivalMonth <= campground.ClosingMonth))
                     && ((departureMonth >= campground.OpeningMonth) && (departureMonth <= campground.ClosingMonth)))
                 {
                     CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
@@ -127,10 +133,18 @@ namespace Capstone
                     Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
                     if (campSites.Count > 0)
                     {
+
                         foreach (CampSite site in campSites)
                         {
+                            Console.WriteLine();
                             Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
+
                         }
+                        Console.WriteLine();
+                        Console.WriteLine($"Total cost for stay: ${totalStay * campground.DailyFee:00.00}");
+                        Console.WriteLine();
+
+
                     }
                     else
                     {
@@ -139,12 +153,39 @@ namespace Capstone
                 }
                 else
                 {
+                    Console.WriteLine();
                     Console.WriteLine("Sorry, park is closed, LOSER!");
+                    Console.WriteLine();
                 }
-               
+
+                int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
+                if (reservedSiteId == 0)
+                {
+                    MainParkList();
+                }
+                else
+                {
+                    string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
+
+                    //GetReservationInfo();
+                    Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
+
+                    GetReservationId(r);
+
+
+                }
 
             }
         }
+
+        private void GetReservationId(Reservation reservation)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"The reservation has been made and the confirmation id is {reservation.ReservationId}");
+            Console.WriteLine();
+            Console.WriteLine($"Enjoy your stay!");
+        }
+
         //CAMPGROUND METHODS
         private void PreviousScreen()
         {
@@ -209,7 +250,7 @@ namespace Capstone
         }
         private void ViewAllCampgrounds(Park park)
         {
-//            CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
+            //            CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
             List<Campground> campgrounds = campgroundSqlDAL.ViewAllCampgrounds(park);
 
             if (campgrounds.Count > 0)
@@ -233,7 +274,7 @@ namespace Capstone
         }
 
 
-        
+
 
         private Park GetParkInfo(string parkName)
         {
@@ -242,15 +283,15 @@ namespace Capstone
 
             if (park != null)
             {
-                    Console.WriteLine(park.ParkName + " National Park");
-                    Console.WriteLine("Location:" + "\t" + park.Location);
-                    Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
-                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
-                    Console.WriteLine();
-                    Console.WriteLine(park.Description);
-                    Console.WriteLine();
- 
+                Console.WriteLine(park.ParkName + " National Park");
+                Console.WriteLine("Location:" + "\t" + park.Location);
+                Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
+                Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
+                Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
+                Console.WriteLine();
+                Console.WriteLine(park.Description);
+                Console.WriteLine();
+
             }
             else
             {
@@ -260,7 +301,7 @@ namespace Capstone
             return park;
         }
 
-        
+
 
         private void PrintHeader()
         {
@@ -303,7 +344,12 @@ namespace Capstone
             Console.WriteLine();
         }
 
+        private void MakeReservationMenu()
+        {
+            Console.WriteLine("Which site should be reserved (enter 0 to cancel)?");
+            Console.WriteLine("What name should the reservation be made under?");
 
+        }
 
     }
 }
