@@ -15,5 +15,6 @@ namespace Capstone
         public bool Accessible { get; set; }
         public int MaxRvLength { get; set; }
         public bool Utilities { get; set; }
+        
     }
 }

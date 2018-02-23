@@ -15,7 +15,7 @@ namespace Capstone
         const string Command_Acadia = "1";
         const string Command_Arches = "2";
         const string Command_CuyahogaNationalValleyPark = "3";
-        const string Command_Quit = "q"; 
+        const string Command_Quit = "q";
         string DatabaseConnection = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
 
 
@@ -53,10 +53,10 @@ namespace Capstone
                         break;
                 }
 
-               CampgroundList();
+                CampgroundList();
             }
         }
-
+        //Campground List
         const string Command_ViewCampgrounds = "1";
         const string Command_SearchForReservations = "2";
         const string Command_ReturnToPreviousScreen = "3";
@@ -80,7 +80,7 @@ namespace Capstone
                         break;
 
                     case Command_SearchForReservations:
-                        SearchReservations();
+                        ReservationSearch();
                         break;
 
                     case Command_ReturnToPreviousScreen:
@@ -96,20 +96,36 @@ namespace Capstone
                 CampgroundMenu();
             }
         }
+
+        private void ReservationSearch()
+        {
+            ViewAllCampgrounds();
+            int campgroundId = CLIHelper.GetInteger("Which campground (enter 0 to cancel)? ");
+            string arrivalDate = CLIHelper.GetString("What is the arrival date? __/__/___");
+            string departureDate = CLIHelper.GetString("What is the departure date? __/__/___");
+            
+
+            CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
+            List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
+
+            Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
+            if(campSites.Count > 0)
+            {
+                foreach (CampSite site in campSites)
+                {
+                    Console.WriteLine($"{site.CampsiteNumber}  {site.MaxOccupancy}  {site.Accessible}  {site.MaxRvLength} {site.Utilities} ");
+                }
+            }
+            else
+            {
+                Console.WriteLine("**** NO RESULTS ****");
+            }
+        }
         //CAMPGROUND METHODS
         private void PreviousScreen()
         {
             PrintHeader();
             ParkMenu();
-        }
-
-        private void SearchReservations()
-        {
-            string campgroundId = CLIHelper.GetString("Which campground (enter 0 to cancel)? ");
-            string arrivalDate = CLIHelper.GetString("What is the arrival date? __/__/___");
-            string departureDate = CLIHelper.GetString("What is the departure date? __/__/___");
-        
-            
         }
 
 
@@ -180,8 +196,8 @@ namespace Capstone
                 {
                     Console.WriteLine($"#{campground.CampgroundId}      {campground.CampName}        {TranslateMonth(campground.OpeningMonth)}     {TranslateMonth(campground.ClosingMonth)}   {campground.DailyFee.ToString("C")}");
                     Console.WriteLine();
-                    
-                    
+
+
                 }
             }
             else
@@ -210,7 +226,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                    
+
                 }
             }
             else
@@ -237,7 +253,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                    
+
                 }
             }
             else
@@ -265,7 +281,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-                   
+
                 }
             }
             else
@@ -308,8 +324,17 @@ namespace Capstone
             Console.WriteLine();
         }
 
-        
-        
+        private void SearchMenu()
+        {
+            Console.WriteLine("Search for Campground Reservation");
+            Console.WriteLine();
+            Console.WriteLine("Which campground (enter 0 to cancel)? ");
+            Console.WriteLine("What is the arrival date? __/__/___");
+            Console.WriteLine("What is the departure date? __/__/___");
+            Console.WriteLine();
+        }
+
+
 
     }
 }
