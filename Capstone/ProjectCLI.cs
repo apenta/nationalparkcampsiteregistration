@@ -24,6 +24,8 @@ namespace Capstone
             PrintHeader();
             ParkMenu();
 
+            Park park = new Park();
+
             while (true)
             {
                 string command = Console.ReadLine();
@@ -33,15 +35,15 @@ namespace Capstone
                 switch (command.ToLower())
                 {
                     case Command_Acadia:
-                        GetAcadiaInfo();
+                        park = GetParkInfo("Acadia");
                         break;
 
                     case Command_Arches:
-                        GetArchesInfo();
+                        park = GetParkInfo("Arches");
                         break;
 
                     case Command_CuyahogaNationalValleyPark:
-                        GetCVNPInfo();
+                        park = GetParkInfo("Cuyahoga Valley");
                         break;
 
                     case Command_Quit:
@@ -53,7 +55,7 @@ namespace Capstone
                         break;
                 }
 
-                CampgroundList();
+                CampgroundList(park);
             }
         }
         //Campground List
@@ -62,7 +64,7 @@ namespace Capstone
         const string Command_ReturnToPreviousScreen = "3";
 
 
-        private void CampgroundList()
+        private void CampgroundList(Park park)
         {
             PrintHeader();
             CampgroundMenu();
@@ -76,11 +78,11 @@ namespace Capstone
                 switch (command.ToLower())
                 {
                     case Command_ViewCampgrounds:
-                        ViewAllCampgrounds();
+                        ViewAllCampgrounds(park);
                         break;
 
                     case Command_SearchForReservations:
-                        ReservationSearch();
+                        ReservationSearch(park);
                         break;
 
                     case Command_ReturnToPreviousScreen:
@@ -97,9 +99,9 @@ namespace Capstone
             }
         }
 
-        private void ReservationSearch()
+        private void ReservationSearch(Park park)
         {
-            ViewAllCampgrounds();
+            ViewAllCampgrounds(park);
             int campgroundId = CLIHelper.GetInteger("Which campground (enter 0 to cancel)? ");
             string arrivalDate = CLIHelper.GetString("What is the arrival date? __/__/___");
             string departureDate = CLIHelper.GetString("What is the departure date? __/__/___");
@@ -183,10 +185,10 @@ namespace Capstone
             }
             return result;
         }
-        private void ViewAllCampgrounds()
+        private void ViewAllCampgrounds(Park park)
         {
             CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
-            List<Campground> campgrounds = dal.ViewAllCampgrounds();
+            List<Campground> campgrounds = dal.ViewAllCampgrounds(park);
 
             if (campgrounds.Count > 0)
             {
@@ -205,19 +207,19 @@ namespace Capstone
                 Console.WriteLine("**** NO RESULTS ****");
                 Console.WriteLine();
             }
+            return;
         }
 
 
-        //PARK METHODS
-        private void GetCVNPInfo()
+        
+
+        private Park GetParkInfo(string parkName)
         {
             ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
-            List<Park> parks = dal.GetCVNPInfo();
+            Park park = dal.GetParkInfo(parkName);
 
-            if (parks.Count > 0)
+            if (park != null)
             {
-                foreach (Park park in parks)
-                {
                     Console.WriteLine(park.ParkName + " National Park");
                     Console.WriteLine("Location:" + "\t" + park.Location);
                     Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
@@ -226,72 +228,17 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine(park.Description);
                     Console.WriteLine();
-
-                }
+ 
             }
             else
             {
                 Console.WriteLine("**** NO RESULTS ****");
                 Console.WriteLine();
             }
+            return park;
         }
 
-        private void GetArchesInfo()
-        {
-            ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
-            List<Park> parks = dal.GetArchesInfo();
-
-            if (parks.Count > 0)
-            {
-                foreach (Park park in parks)
-                {
-                    Console.WriteLine(park.ParkName + " National Park");
-                    Console.WriteLine("Location:" + "\t" + park.Location);
-                    Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
-                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
-                    Console.WriteLine();
-                    Console.WriteLine(park.Description);
-                    Console.WriteLine();
-
-                }
-            }
-            else
-            {
-                Console.WriteLine("**** NO RESULTS ****");
-                Console.WriteLine();
-            }
-        }
-
-
-        private void GetAcadiaInfo()
-        {
-            ParkSqlDAL dal = new ParkSqlDAL(DatabaseConnection);
-            List<Park> parks = dal.GetAcadiaInfo();
-
-            if (parks.Count > 0)
-            {
-                foreach (Park park in parks)
-                {
-                    Console.WriteLine(park.ParkName + " National Park");
-                    Console.WriteLine("Location:" + "\t" + park.Location);
-                    Console.WriteLine("Established:" + "\t" + park.EstDate.ToString("MM/dd/yyyy"));
-                    Console.WriteLine($"Area: {park.Area:###,###,##0} sq km");
-                    Console.WriteLine($"Annual Visitors: {park.Visitors:###,###,##0}");
-                    Console.WriteLine();
-                    Console.WriteLine(park.Description);
-                    Console.WriteLine();
-
-                }
-            }
-            else
-            {
-                Console.WriteLine("**** NO RESULTS ****");
-                Console.WriteLine();
-            }
-        }
-
-
+        
 
         private void PrintHeader()
         {

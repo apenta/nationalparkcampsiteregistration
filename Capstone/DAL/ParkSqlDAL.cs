@@ -19,9 +19,11 @@ namespace Capstone.DAL
             connectionString = DatabaseConnection;
         }
 
-        public List<Park> GetAcadiaInfo()
+
+        public Park GetParkInfo(string parkName)
         {
-            List<Park> output = new List<Park>();
+            Park park = new Park();
+            
             {
                 try
                 {
@@ -29,13 +31,14 @@ namespace Capstone.DAL
                     {
                         conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SELECT * from park WHERE name = 'Acadia'", conn);
+                        SqlCommand cmd = new SqlCommand("SELECT * from park WHERE name = @parkName", conn);
+                        cmd.Parameters.AddWithValue("@parkName", parkName);
 
                         SqlDataReader reader = cmd.ExecuteReader();
 
-                        while (reader.Read())
+                        if (reader.Read())
                         {
-                            Park park = new Park();
+                            park.ParkId = Convert.ToInt32(reader["park_id"]);
                             park.ParkName = Convert.ToString(reader["name"]);
                             park.Location = Convert.ToString(reader["location"]);
                             park.EstDate = Convert.ToDateTime(reader["establish_date"]);
@@ -43,7 +46,7 @@ namespace Capstone.DAL
                             park.Visitors = Convert.ToInt32(reader["visitors"]);
                             park.Description = Convert.ToString(reader["description"]);
 
-                            output.Add(park);
+                       
                         }
                     }
                 }
@@ -52,81 +55,11 @@ namespace Capstone.DAL
                 {
                     Console.WriteLine("An error occured reading the database: " + ex.Message);
                 }
-                return output;
+                return park;
             }
         }
-        public List<Park> GetArchesInfo()
-        {
-            List<Park> output = new List<Park>();
-            {
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
 
-                        SqlCommand cmd = new SqlCommand("SELECT * from park WHERE name = 'Arches'", conn);
-
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            Park park = new Park();
-                            park.ParkName = Convert.ToString(reader["name"]);
-                            park.Location = Convert.ToString(reader["location"]);
-                            park.EstDate = Convert.ToDateTime(reader["establish_date"]);
-                            park.Area = Convert.ToInt32(reader["area"]);
-                            park.Visitors = Convert.ToInt32(reader["visitors"]);
-                            park.Description = Convert.ToString(reader["description"]);
-
-                            output.Add(park);
-                        }
-                    }
-                }
-
-                catch (SqlException ex)
-                {
-                    Console.WriteLine("An error occured reading the database: " + ex.Message);
-                }
-                return output;
-            }
-        }
-        public List<Park> GetCVNPInfo()
-        {
-            List<Park> output = new List<Park>();
-            {
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-
-                        SqlCommand cmd = new SqlCommand("SELECT * from park WHERE name = 'Cuyahoga Valley'", conn);
-
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            Park park = new Park();
-                            park.ParkName = Convert.ToString(reader["name"]);
-                            park.Location = Convert.ToString(reader["location"]);
-                            park.EstDate = Convert.ToDateTime(reader["establish_date"]);
-                            park.Area = Convert.ToInt32(reader["area"]);
-                            park.Visitors = Convert.ToInt32(reader["visitors"]);
-                            park.Description = Convert.ToString(reader["description"]);
-
-                            output.Add(park);
-                        }
-                    }
-                }
-
-                catch (SqlException ex)
-                {
-                    Console.WriteLine("An error occured reading the database: " + ex.Message);
-                }
-                return output;
-            }
-        }
+      
 
 
     }
