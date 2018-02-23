@@ -3,8 +3,6 @@
 --DROP TABLE campground;
 --DROP TABLE park;
 
-
-
 CREATE TABLE park (
   park_id integer identity NOT NULL,
   name varchar(80) NOT NULL,          -- Name of the park
@@ -212,5 +210,46 @@ ALTER TABLE site ADD FOREIGN KEY (campground_id) REFERENCES campground(campgroun
 ALTER TABLE reservation ADD FOREIGN KEY (site_id) REFERENCES site(site_id);
 
 
---select *
---FROM site;
+select *
+FROM campground;
+
+select *
+from site;
+
+select site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee
+from site
+left join campground on campground.campground_id = site.campground_id
+
+where campground.campground_id = 1;
+
+select * from reservation;
+
+--select site_id, from_date, to_date
+--from reservation
+--where site_id = 3;
+
+
+DECLARE @arrivalDate DATETIME
+SET @arrivalDate = '2018-02-19';
+
+DECLARE @departureDate DATETIME
+SET @departureDate = '2018-02-23';
+
+SELECT site_number, max_occupancy, accessible, max_rv_length, utilities, campground.daily_fee
+FROM site 
+LEFT JOIN campground ON campground.campground_id = site.campground_id 
+--JOIN reservation ON reservation.site_id = site.site_id 
+WHERE site.site_id NOT IN (SELECT reservation.site_id FROM reservation 
+WHERE (@arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date)
+OR (@arrivalDate <= reservation.from_date AND @departureDate <= reservation.to_date AND @departureDate >= reservation.from_date)
+OR (@arrivalDate >= reservation.from_date AND @departureDate <= reservation.to_date)
+OR (@arrivalDate >= reservation.from_date AND @arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date)
+)
+AND campground.campground_id = 2
+AND (2 >= campground.open_from_mm AND 2 <= campground.open_to_mm)
+AND (2 >= campground.open_from_mm AND 2 <= campground.open_to_mm);
+
+SELECT *
+FROM campground;
+
+

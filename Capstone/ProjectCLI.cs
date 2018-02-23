@@ -17,10 +17,12 @@ namespace Capstone
         const string Command_CuyahogaNationalValleyPark = "3";
         const string Command_Quit = "q";
         string DatabaseConnection = ConfigurationManager.ConnectionStrings["CapstoneDatabase"].ConnectionString;
+        CampgroundSqlDAL campgroundSqlDAL = null;
 
 
         public void MainParkList()
         {
+            campgroundSqlDAL = new CampgroundSqlDAL(DatabaseConnection);
             PrintHeader();
             ParkMenu();
 
@@ -103,24 +105,44 @@ namespace Capstone
         {
             ViewAllCampgrounds(park);
             int campgroundId = CLIHelper.GetInteger("Which campground (enter 0 to cancel)? ");
-            string arrivalDate = CLIHelper.GetString("What is the arrival date? __/__/___");
-            string departureDate = CLIHelper.GetString("What is the departure date? __/__/___");
-            
-
-            CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
-            List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
-
-            Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
-            if(campSites.Count > 0)
+            if (campgroundId == 0)
             {
-                foreach (CampSite site in campSites)
-                {
-                    Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
-                }
+                return;
             }
             else
             {
-                Console.WriteLine("**** NO RESULTS ****");
+                Campground campground = campgroundSqlDAL.GetCampgroundById(campgroundId);
+
+                string arrivalDate = CLIHelper.GetString("What is the arrival date? MM/DD/YYYY");
+                string departureDate = CLIHelper.GetString("What is the departure date? MM/DD/YYYY");
+                int arrivalMonth = Int32.Parse(arrivalDate.Substring(0, 2));
+                int departureMonth = Int32.Parse(departureDate.Substring(0, 2));
+
+                if(((arrivalMonth >= campground.OpeningMonth) && (arrivalMonth <= campground.ClosingMonth)) 
+                    && ((departureMonth >= campground.OpeningMonth) && (departureMonth <= campground.ClosingMonth)))
+                {
+                    CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
+                    List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
+
+                    Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
+                    if (campSites.Count > 0)
+                    {
+                        foreach (CampSite site in campSites)
+                        {
+                            Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("**** NO RESULTS ****");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Sorry, park is closed, LOSER!");
+                }
+               
+
             }
         }
         //CAMPGROUND METHODS
@@ -187,8 +209,8 @@ namespace Capstone
         }
         private void ViewAllCampgrounds(Park park)
         {
-            CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
-            List<Campground> campgrounds = dal.ViewAllCampgrounds(park);
+//            CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
+            List<Campground> campgrounds = campgroundSqlDAL.ViewAllCampgrounds(park);
 
             if (campgrounds.Count > 0)
             {
