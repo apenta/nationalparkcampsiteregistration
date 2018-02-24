@@ -61,7 +61,7 @@ namespace Capstone.DAL
 
 
         }
-        public Campground GetCampgroundById(int id)
+        public Campground GetCampgroundById(Park park, int id)
         {
             Campground campground = null;
             try
@@ -70,7 +70,8 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand("SELECT * from campground WHERE campground_id = @Id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * from campground WHERE park_id = @ParkId AND campground_id = @Id", conn);
+                    cmd.Parameters.AddWithValue("@ParkId", park.ParkId);
                     cmd.Parameters.AddWithValue("@Id", id);
 
 

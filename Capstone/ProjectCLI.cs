@@ -51,11 +51,16 @@ namespace Capstone
                         break;
 
                     case Command_Quit:
+                        Console.Clear();
                         Console.WriteLine("Thank you for using National Park Campsite Reservation!");
+                        MainParkList();
                         return;
 
                     default:
+                        Console.Clear();
                         Console.WriteLine("The command provided was not a valid command, please try again.");
+                        Console.WriteLine();
+                        MainParkList();
                         break;
                 }
 
@@ -70,7 +75,7 @@ namespace Capstone
 
         private void CampgroundList(Park park)
         {
-            PrintHeader();
+//            PrintHeader();
             CampgroundMenu();
 
 
@@ -91,7 +96,8 @@ namespace Capstone
                         break;
 
                     case Command_ReturnToPreviousScreen:
-                        PreviousScreen();
+                        Console.Clear();
+                        MainParkList();
                         break;
 
 
@@ -101,88 +107,88 @@ namespace Capstone
                         break;
                 }
 
-                
+
             }
         }
 
-        private void ReservationSearch(Park park)
+        public void ReservationSearch(Park park)
         {
             ViewAllCampgrounds(park);
+
             int campgroundId = CLIHelper.GetInteger("Which campground (enter 0 to cancel)? ");
 
             if (campgroundId == 0)
             {
                 MainParkList();
             }
-            
-            else 
+
+            else
             {
-               
-                Campground campground = campgroundSqlDAL.GetCampgroundById(campgroundId);
+//                List<Campground> campgrounds = campgroundSqlDAL.ViewAllCampgrounds(park);
+                Campground campground = campgroundSqlDAL.GetCampgroundById(park, campgroundId);
 
                 if (campgroundId != campground.CampgroundId)
                 {
                     Console.WriteLine("Sorry, that was an invalid input! Please start over!");
-                    MainParkList();
+                    return;
                 }
                 else
                 {
-                
-                string arrivalDate = CLIHelper.GetString("What is the arrival date? MM/DD/YYYY");
-                string departureDate = CLIHelper.GetString("What is the departure date? MM/DD/YYYY");
-                int arrivalMonth = Int32.Parse(arrivalDate.Substring(0, 2));
-                int departureMonth = Int32.Parse(departureDate.Substring(0, 2));
+                    string arrivalDate = CLIHelper.GetString("What is the arrival date? MM/DD/YYYY");
+                    string departureDate = CLIHelper.GetString("What is the departure date? MM/DD/YYYY");
 
-                int totalStay = (DateTime.Parse(departureDate) - DateTime.Parse(arrivalDate)).Days;
+                    int arrivalMonth = Int32.Parse(arrivalDate.Substring(0, 2));
+                    int departureMonth = Int32.Parse(departureDate.Substring(0, 2));
 
-                if (((arrivalMonth >= campground.OpeningMonth) && (arrivalMonth <= campground.ClosingMonth))
-                    && ((departureMonth >= campground.OpeningMonth) && (departureMonth <= campground.ClosingMonth)))
-                {
-                    CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
-                    List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
+                    int totalStay = (DateTime.Parse(departureDate) - DateTime.Parse(arrivalDate)).Days;
 
-                    Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
-                    if (campSites.Count == campground.CampgroundId)
+                    if (((arrivalMonth >= campground.OpeningMonth) && (arrivalMonth <= campground.ClosingMonth))
+                        && ((departureMonth >= campground.OpeningMonth) && (departureMonth <= campground.ClosingMonth)))
                     {
+                        CampSiteSqlDAL dal = new CampSiteSqlDAL(DatabaseConnection);
+                        List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
 
-                        foreach (CampSite site in campSites)
+                        if (campSites.Count > 0)
+                        {
+                            Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
+
+                            foreach (CampSite site in campSites)
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
+
+                            }
+                            Console.WriteLine();
+                            Console.WriteLine($"Total cost for stay: ${totalStay * campground.DailyFee:00.00}");
+                            Console.WriteLine();
+                        }
+                        else
                         {
                             Console.WriteLine();
-                            Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
-
+                            Console.WriteLine("**** BOOKED OUT!! ****");
+                            Console.WriteLine("Please try another date or another campground.");
+                            Console.WriteLine();
+                            ReservationSearch(park);
                         }
-                        Console.WriteLine();
-                        Console.WriteLine($"Total cost for stay: ${totalStay * campground.DailyFee:00.00}");
-                        Console.WriteLine();
-
-
                     }
                     else
                     {
-                        Console.WriteLine("**** NO RESULTS ****");
-                        SearchMenu();
+                        Console.WriteLine();
+                        Console.WriteLine("Sorry, campground is closed, LOSER!");
+                        Console.WriteLine();
+                        MainParkList();
                     }
-                }
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Sorry, park is closed, LOSER!");
-                    Console.WriteLine();
-                    MainParkList();
-                }
 
-                int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
+                    int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
                     if (reservedSiteId == 0)
                     {
+                        Console.Clear();
                         MainParkList();
                     }
                     else
                     {
                         string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
-
-                        //GetReservationInfo();
                         Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
-
                         GetReservationId(r);
                     }
 
@@ -200,11 +206,12 @@ namespace Capstone
         }
 
         //CAMPGROUND METHODS
-        private void PreviousScreen()
-        {
-            PrintHeader();
-            MainParkList();
-        }
+        //private void PreviousScreen()
+        //{
+        //    Console.Clear();
+        //    PrintHeader();
+        //    MainParkList();
+        //}
 
 
         private string TranslateMonth(int month)
@@ -268,14 +275,12 @@ namespace Capstone
 
             if (campgrounds.Count > 0)
             {
-                Console.WriteLine($"Name             Open             Close           Daily Fee");
+                Console.WriteLine($"Number        Name             Open             Close           Daily Fee");
 
                 foreach (Campground campground in campgrounds)
                 {
                     Console.WriteLine($"#{campground.CampgroundId}      {campground.CampName}        {TranslateMonth(campground.OpeningMonth)}     {TranslateMonth(campground.ClosingMonth)}   {campground.DailyFee.ToString("C")}");
                     Console.WriteLine();
-
-
                 }
             }
             else
@@ -313,8 +318,6 @@ namespace Capstone
             }
             return park;
         }
-
-
 
         private void PrintHeader()
         {
