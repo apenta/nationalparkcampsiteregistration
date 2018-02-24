@@ -109,14 +109,25 @@ namespace Capstone
         {
             ViewAllCampgrounds(park);
             int campgroundId = CLIHelper.GetInteger("Which campground (enter 0 to cancel)? ");
+
             if (campgroundId == 0)
             {
-                return;
+                MainParkList();
             }
-            else
+            
+            else 
             {
+               
                 Campground campground = campgroundSqlDAL.GetCampgroundById(campgroundId);
 
+                if (campgroundId != campground.CampgroundId)
+                {
+                    Console.WriteLine("Sorry, that was an invalid input! Please start over!");
+                    MainParkList();
+                }
+                else
+                {
+                
                 string arrivalDate = CLIHelper.GetString("What is the arrival date? MM/DD/YYYY");
                 string departureDate = CLIHelper.GetString("What is the departure date? MM/DD/YYYY");
                 int arrivalMonth = Int32.Parse(arrivalDate.Substring(0, 2));
@@ -131,7 +142,7 @@ namespace Capstone
                     List<CampSite> campSites = dal.Search(campgroundId, arrivalDate, departureDate);
 
                     Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
-                    if (campSites.Count > 0)
+                    if (campSites.Count == campground.CampgroundId)
                     {
 
                         foreach (CampSite site in campSites)
@@ -149,6 +160,7 @@ namespace Capstone
                     else
                     {
                         Console.WriteLine("**** NO RESULTS ****");
+                        SearchMenu();
                     }
                 }
                 else
@@ -160,19 +172,19 @@ namespace Capstone
                 }
 
                 int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
-                if (reservedSiteId == 0)
-                {
-                    MainParkList();
-                }
-                else
-                {
-                    string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
+                    if (reservedSiteId == 0)
+                    {
+                        MainParkList();
+                    }
+                    else
+                    {
+                        string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
 
-                    //GetReservationInfo();
-                    Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
+                        //GetReservationInfo();
+                        Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
 
-                    GetReservationId(r);
-
+                        GetReservationId(r);
+                    }
 
                 }
 
@@ -191,7 +203,7 @@ namespace Capstone
         private void PreviousScreen()
         {
             PrintHeader();
-            ParkMenu();
+            MainParkList();
         }
 
 
