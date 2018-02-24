@@ -156,6 +156,7 @@ namespace Capstone
                     Console.WriteLine();
                     Console.WriteLine("Sorry, park is closed, LOSER!");
                     Console.WriteLine();
+                    MainParkList();
                 }
 
                 int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
