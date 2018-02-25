@@ -20,7 +20,13 @@ namespace Capstone.Tests
         [TestMethod]
         public void ViewAllParks_Successful()
         {
-            
+            ParkSqlDAL testClass = new ParkSqlDAL(connectionString);
+            Park newPark = new Park();
+            newPark.ParkName = "Acadia";
+
+            testClass.GetParkInfo(newPark.ParkName);
+
+
         }
     }
 }

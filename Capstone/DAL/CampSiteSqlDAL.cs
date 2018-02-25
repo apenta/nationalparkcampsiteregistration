@@ -38,12 +38,14 @@ namespace Capstone.DAL
                     while (reader.Read())
                     {
                         CampSite campSite = new CampSite();
-//                        Campground campground = new Campground();
-                        
+                        //                        Campground campground = new Campground();
+
+//                        campSite.SiteId = Convert.ToInt32(reader["site_id"]);
+//                        campSite.CampgroundId = Convert.ToInt32(reader["campground_id"]);
                         campSite.CampsiteNumber = Convert.ToInt32(reader["site_number"]);
                         campSite.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
                         campSite.Accessible = Convert.ToBoolean(reader["accessible"]);
-                        campSite.MaxRvLength = Convert.ToInt32(reader["max_rv_length"]);
+                        campSite.MaxRvLength = Convert.ToString(reader["max_rv_length"]);
                         campSite.Utilities = Convert.ToBoolean(reader["utilities"]);
                         campSite.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 

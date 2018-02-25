@@ -63,7 +63,7 @@ namespace Capstone.DAL
         }
         public Campground GetCampgroundById(Park park, int id)
         {
-            Campground campground = null;
+            Campground campground = new Campground();
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
