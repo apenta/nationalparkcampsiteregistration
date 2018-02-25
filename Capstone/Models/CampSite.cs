@@ -13,7 +13,7 @@ namespace Capstone
         public int CampsiteNumber { get; set; }
         public int MaxOccupancy { get; set; }
         public bool Accessible { get; set; }
-        public int MaxRvLength { get; set; }
+        public string MaxRvLength { get; set; }
         public bool Utilities { get; set; }
         public decimal DailyFee { get; set; }
     }

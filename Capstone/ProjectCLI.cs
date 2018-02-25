@@ -150,13 +150,11 @@ namespace Capstone
 
                         if (campSites.Count > 0)
                         {
-                            Console.WriteLine("Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
-
+                            Console.WriteLine("Site No.".PadRight(20) + "Max Occup.".PadRight(20) + "Accessible?".PadRight(20) + "Max RV Length".PadRight(20) + "Utility".PadRight(20) + "Cost");
                             foreach (CampSite site in campSites)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {TranslateBoolAccessible(site.Accessible)}      {site.MaxRvLength}     {TranslateBoolUtilities(site.Utilities)}   {site.DailyFee.ToString("C")}");
-
+                                Console.WriteLine(site.CampsiteNumber.ToString().PadRight(20) + site.MaxOccupancy.ToString().PadRight(20) + TranslateBoolAccessible(site.Accessible).PadRight(20) + TranslateRVLength(site.MaxRvLength).ToString().PadRight(20) + TranslateBoolUtilities(site.Utilities).PadRight(20) + site.DailyFee.ToString("C"));
                             }
                             Console.WriteLine();
                             Console.WriteLine($"Total cost for stay: ${totalStay * campground.DailyFee:00.00}");
@@ -237,6 +235,22 @@ namespace Capstone
             {
                 result = "N/A";
             }
+            return result;
+        }
+
+        private string TranslateRVLength(string maxRVLength)
+        {
+            string result = "";
+
+            if (maxRVLength == "0")
+            {
+                result = "N/A";
+            }
+            else
+            {
+                result = maxRVLength;
+            }
+
             return result;
         }
 

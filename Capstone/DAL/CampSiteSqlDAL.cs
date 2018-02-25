@@ -43,7 +43,7 @@ namespace Capstone.DAL
                         campSite.CampsiteNumber = Convert.ToInt32(reader["site_number"]);
                         campSite.MaxOccupancy = Convert.ToInt32(reader["max_occupancy"]);
                         campSite.Accessible = Convert.ToBoolean(reader["accessible"]);
-                        campSite.MaxRvLength = Convert.ToInt32(reader["max_rv_length"]);
+                        campSite.MaxRvLength = Convert.ToString(reader["max_rv_length"]);
                         campSite.Utilities = Convert.ToBoolean(reader["utilities"]);
                         campSite.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 
