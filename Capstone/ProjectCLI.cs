@@ -302,11 +302,11 @@ namespace Capstone
 
             if (campgrounds.Count > 0)
             {
-                Console.WriteLine($"Number        Name             Open             Close           Daily Fee");
+                Console.WriteLine("Number".PadRight(11) + "Name".PadRight(35) + "Open".PadRight(20) + "Close".PadRight(20) + "Daily Fee".PadRight(0));
 
                 foreach (Campground campground in campgrounds)
                 {
-                    Console.WriteLine($"#{campground.CampgroundId}      {campground.CampName}        {TranslateMonth(campground.OpeningMonth)}     {TranslateMonth(campground.ClosingMonth)}   {campground.DailyFee.ToString("C")}");
+                    Console.WriteLine("#".PadRight(0) +  (campground.CampgroundId).ToString().PadRight(10) + (campground.CampName).PadRight(35) + TranslateMonth(campground.OpeningMonth).PadRight(20) + TranslateMonth(campground.ClosingMonth).PadRight(20) + campground.DailyFee.ToString("C").PadRight(20));
                     Console.WriteLine();
                 }
             }
@@ -348,7 +348,7 @@ namespace Capstone
 
         private void PrintHeader()
         {
-            Console.WriteLine("__    _  _______  _______  ___   _______  __    _  _______  ___        _______  _______  ______    ___   _  _______");
+            Console.WriteLine(" __    _  _______  _______  ___   _______  __    _  _______  ___        _______  _______  ______    ___   _  _______");
             Console.WriteLine("|  |  | ||   _   ||       ||   | |       ||  |  | ||   _   ||   |      |       ||   _   ||    _ |  |   | | ||       |");
             Console.WriteLine("|   |_| ||  |_|  ||_     _||   | |   _   ||   |_| ||  |_|  ||   |      |    _  ||  |_|  ||   | ||  |   |_| ||  _____|");
             Console.WriteLine("|       ||       |  |   |  |   | |  | |  ||       ||       ||   |      |   |_| ||       ||   |_||_ |      _|| |_____");
