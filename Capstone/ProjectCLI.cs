@@ -155,7 +155,7 @@ namespace Capstone
                             foreach (CampSite site in campSites)
                             {
                                 Console.WriteLine();
-                                Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {site.Accessible}      {site.MaxRvLength}     {site.Utilities}   {site.DailyFee.ToString("C")}");
+                                Console.WriteLine($"{site.CampsiteNumber}    {site.MaxOccupancy}     {TranslateBoolAccessible(site.Accessible)}      {site.MaxRvLength}     {TranslateBoolUtilities(site.Utilities)}   {site.DailyFee.ToString("C")}");
 
                             }
                             Console.WriteLine();
@@ -200,19 +200,45 @@ namespace Capstone
         private void GetReservationId(Reservation reservation)
         {
             Console.WriteLine();
-            Console.WriteLine($"The reservation has been made and the confirmation id is {reservation.ReservationId}");
+            Console.WriteLine($"Congratulations, {reservation.ReservationName}, your reservation has been made for {reservation.FromDate} to {reservation.ToDate}."); //at {campground.CampName} 
+            Console.WriteLine($"Your confirmation id is {reservation.ReservationId}.");
             Console.WriteLine();
             Console.WriteLine($"Enjoy your stay!");
+            System.Threading.Thread.Sleep(1500);
+            Console.WriteLine();
+            Console.WriteLine();
+            MainParkList();
         }
 
-        //CAMPGROUND METHODS
-        //private void PreviousScreen()
-        //{
-        //    Console.Clear();
-        //    PrintHeader();
-        //    MainParkList();
-        //}
+        private string TranslateBoolAccessible(bool accessible)
+        {
+            string result = "";
 
+            if (accessible == true)
+            {
+                result = "Yes";
+            }
+            else if (accessible == false)
+            {
+                result = "No";
+            }
+            return result;
+        }
+
+        private string TranslateBoolUtilities(bool utilities)
+        {
+            string result = "";
+
+            if (utilities == true)
+            {
+                result = "Yes";
+            }
+            else if (utilities == false)
+            {
+                result = "N/A";
+            }
+            return result;
+        }
 
         private string TranslateMonth(int month)
         {
@@ -268,6 +294,7 @@ namespace Capstone
             }
             return result;
         }
+
         private void ViewAllCampgrounds(Park park)
         {
             //            CampgroundSqlDAL dal = new CampgroundSqlDAL(DatabaseConnection);
@@ -366,6 +393,22 @@ namespace Capstone
             Console.WriteLine("What name should the reservation be made under?");
 
         }
+   
+        //public class StringHelpers
+        //{
+        //    /// <summary>
+        //    /// Convert boolean value to "Yes" or "No"
+        //    /// </summary>
+        //    /// <param name="b"></param>
+        //    /// <returns></returns>
+        //    public static string ConvertBoolToYesNo(bool Accessible)
+        //    {
+        //        if (Accessible == true) { return "Yes"; }
+
+        //        else return "No";
+        //    }
+        //}
 
     }
 }
+

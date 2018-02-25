@@ -230,10 +230,13 @@ select * from reservation;
 
 
 DECLARE @arrivalDate DATETIME
-SET @arrivalDate = '2018-02-19';
+SET @arrivalDate = '2018-02-21';
 
 DECLARE @departureDate DATETIME
-SET @departureDate = '2018-02-23';
+SET @departureDate = '2018-02-25';
+
+DECLARE @campgroundId int
+SET @campgroundId = 1; 
 
 SELECT site_number, max_occupancy, accessible, max_rv_length, utilities, campground.daily_fee
 FROM site 
@@ -245,9 +248,7 @@ OR (@arrivalDate <= reservation.from_date AND @departureDate <= reservation.to_d
 OR (@arrivalDate >= reservation.from_date AND @departureDate <= reservation.to_date)
 OR (@arrivalDate >= reservation.from_date AND @arrivalDate <= reservation.from_date AND @departureDate >= reservation.to_date)
 )
-AND campground.campground_id = 2
-AND (2 >= campground.open_from_mm AND 2 <= campground.open_to_mm)
-AND (2 >= campground.open_from_mm AND 2 <= campground.open_to_mm);
+AND campground.campground_id = @campgroundId;
 
 SELECT *
 FROM campground;
