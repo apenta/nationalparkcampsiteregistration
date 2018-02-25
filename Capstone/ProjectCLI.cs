@@ -150,7 +150,7 @@ namespace Capstone
 
                         if (campSites.Count > 0)
                         {
-                            Console.WriteLine($"Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
+                            Console.WriteLine("Site No.    Max Occup.    Accessible?    Max RV Length   Utility   Cost");
 
                             foreach (CampSite site in campSites)
                             {
@@ -200,7 +200,7 @@ namespace Capstone
         private void GetReservationId(Reservation reservation)
         {
             Console.WriteLine();
-            Console.WriteLine($"Congratulations, {reservation.ReservationName}, your reservation has been made for {reservation.FromDate} to {reservation.ToDate}."); //at {campground.CampName} 
+            Console.WriteLine($"Congratulations, {reservation.ReservationName}, your reservation has been made for {reservation.FromDate.ToString("MM/dd/yyyy")} to {reservation.ToDate.ToString("MM/dd/yyyy")}."); //at {campground.CampName} 
             Console.WriteLine($"Your confirmation id is {reservation.ReservationId}.");
             Console.WriteLine();
             Console.WriteLine($"Enjoy your stay!");
