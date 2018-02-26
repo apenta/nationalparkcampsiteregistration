@@ -184,26 +184,32 @@ namespace Capstone
                             Console.WriteLine();
 
                             int reservedSiteId = CLIHelper.GetInteger("Which site should be reserved (enter 0 to cancel)?");
+
+                            bool exists = false;
+
+                            foreach (CampSite site in campSites)
+                            {
+                                if (site.SiteId == reservedSiteId)
+                                {
+                                    exists = true;
+                                }
+                            }
                             if (reservedSiteId == 0)
                             {
                                 Console.Clear();
                                 MainParkList();
                             }
+                            else if(exists)
+                            {
+                                string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
+                                Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
+                                GetReservationId(r);
+
+                            }
                             else
                             {
-                                CampSite campsite = campsiteSqlDAL.Search();
-
-                                if (reservedSiteId != campsite.CampsiteNumber)
-                                {
-                                    Console.WriteLine("Sorry, that was an invalid input! Please start over!");
-                                    CampgroundMenu();
-                                }
-                                else
-                                {
-                                    string reservationName = CLIHelper.GetString("What name should the reservation be made under?");
-                                    Reservation r = reservationsqlDAL.GetReservationInfo(reservedSiteId, reservationName, arrivalDate, departureDate);
-                                    GetReservationId(r);
-                                }
+                                Console.WriteLine("Sorry, that was an invalid input! Please start over!");
+                                CampgroundMenu();
                             }
                         }
                         else
